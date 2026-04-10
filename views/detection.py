@@ -31,146 +31,6 @@ def detection_page():
             padding: 1rem;
             border-bottom: 2px solid rgba(0, 188, 212, 0.3);
         }
-        
-        /* File uploader */
-        [data-testid="stFileUploader"] {
-            background: rgba(30, 41, 59, 0.6) !important;
-            border: 2px dashed rgba(0, 188, 212, 0.4) !important;
-            border-radius: 12px !important;
-            padding: 2rem !important;
-        }
-        
-        [data-testid="stFileUploader"] label {
-            color: #80deea !important;
-            font-weight: 600 !important;
-            font-size: 16px !important;
-        }
-        
-        [data-testid="stFileUploader"] section {
-            border: none !important;
-        }
-        
-        /* Upload button */
-        [data-testid="stFileUploader"] button {
-            background: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%) !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 8px !important;
-            padding: 10px 20px !important;
-            font-weight: 600 !important;
-        }
-        
-        /* Metric cards */
-        [data-testid="stMetricValue"] {
-            font-size: 36px !important;
-            color: #00bcd4 !important;
-            font-weight: 700 !important;
-            text-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
-        }
-        
-        [data-testid="stMetricLabel"] {
-            color: #80deea !important;
-            font-size: 16px !important;
-            font-weight: 600 !important;
-            letter-spacing: 2px;
-        }
-        
-        /* Metric containers */
-        [data-testid="metric-container"] {
-            background: rgba(20, 35, 50, 0.8) !important;
-            backdrop-filter: blur(15px);
-            padding: 1.5rem !important;
-            border-radius: 15px !important;
-            border: 1px solid rgba(0, 188, 212, 0.3) !important;
-            box-shadow: 
-                0 4px 20px rgba(0, 0, 0, 0.3),
-                0 0 40px rgba(0, 188, 212, 0.1) !important;
-        }
-        
-        /* Video frame container */
-        .stImage {
-            border-radius: 12px !important;
-            overflow: hidden !important;
-            border: 2px solid rgba(0, 188, 212, 0.3) !important;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
-        }
-        
-        /* Alert boxes */
-        .stAlert {
-            background: rgba(30, 41, 59, 0.9) !important;
-            backdrop-filter: blur(10px) !important;
-            border-radius: 10px !important;
-            border-left: 4px solid #00bcd4 !important;
-            color: #b2ebf2 !important;
-            font-weight: 500 !important;
-        }
-        
-        /* Success message */
-        .stSuccess {
-            background-color: rgba(0, 200, 83, 0.2) !important;
-            color: #4ade80 !important;
-            border-left: 4px solid #22c55e !important;
-            font-weight: 600 !important;
-        }
-        
-        /* Error/Alert message */
-        .stError {
-            background-color: rgba(239, 68, 68, 0.2) !important;
-            color: #ff5252 !important;
-            border-left: 4px solid #ef4444 !important;
-            font-weight: 700 !important;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-        
-        /* Info message */
-        .stInfo {
-            background-color: rgba(0, 188, 212, 0.15) !important;
-            color: #80deea !important;
-            border-left: 4px solid #00bcd4 !important;
-        }
-        
-        /* Pulse animation for alerts */
-        @keyframes pulse {
-            0%, 100% {
-                box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
-            }
-            50% {
-                box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
-            }
-        }
-        
-        /* Sidebar styling */
-        [data-testid="stSidebar"] {
-            background-color: rgba(15, 23, 42, 0.95) !important;
-            backdrop-filter: blur(10px) !important;
-            border-right: 1px solid rgba(0, 188, 212, 0.2) !important;
-        }
-        
-        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] {
-            color: #e0f7fa !important;
-        }
-        
-        /* Status indicator */
-        .status-box {
-            background: rgba(30, 41, 59, 0.8);
-            padding: 1rem;
-            border-radius: 10px;
-            border-left: 4px solid #00bcd4;
-            margin: 1rem 0;
-            color: #b2ebf2;
-        }
-        
-        /* Processing status */
-        .processing-status {
-            text-align: center;
-            color: #00bcd4;
-            font-size: 18px;
-            font-weight: 600;
-            padding: 1rem;
-            background: rgba(0, 188, 212, 0.1);
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
         </style>
     """, unsafe_allow_html=True)
 
@@ -187,31 +47,14 @@ def detection_page():
     # ================= FILE UPLOADER =================
     uploaded = st.file_uploader(
         " Upload Video File",
-        type=["mp4", "avi", "mov", "mkv"],
-        help="Supported formats: MP4, AVI, MOV, MKV"
+        type=["mp4", "avi", "mov", "mkv"]
     )
 
     if not uploaded:
         st.info("Please upload a video file to begin detection")
-        st.markdown(
-            """
-            <div class="status-box">
-                <strong> Instructions:</strong>
-                <ul>
-                    <li>Upload a video file using the uploader above</li>
-                    <li>Supported formats: MP4, AVI, MOV, MKV</li>
-                    <li>The system will automatically detect and count people</li>
-                    <li>Alert will trigger if crowd exceeds the limit</li>
-                </ul>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
         return
 
-    # ================= PROCESSING SECTION =================
-    st.markdown('<div class="processing-status"> Processing video...</div>', unsafe_allow_html=True)
-    
+    # ================= PROCESSING =================
     tfile = tempfile.NamedTemporaryFile(delete=False)
     tfile.write(uploaded.read())
 
@@ -219,38 +62,38 @@ def detection_page():
     frame_window = st.empty()
     status_container = st.empty()
 
-    # Reset tracker and alert state so each uploaded video starts fresh
     reset_tracker()
     st.session_state.alert_triggered = False
-    status_container.empty()
 
     total_in = total_out = 0
+    frame_count = 0  # 🔥 added for optimization
 
     ok, frame = cap.read()
     if not ok:
-        st.error(" Cannot read video file. Please try a different video.")
+        st.error("Cannot read video file")
         return
 
     h, w = frame.shape[:2]
     line_y = h // 2
 
-    # ================= METRICS PLACEHOLDER =================
     metrics_cols = st.columns(3)
 
+    # ================= MAIN LOOP =================
     while ok:
         ok, frame = cap.read()
         if not ok:
             break
 
+        frame_count += 1
+
+        #  Control Firebase writes
+        save_flag = (frame_count % 3 == 0)
+
         frame, total_in, total_out, inside = process_frame(
-            frame, h, w, line_y, total_in, total_out
+            frame, h, w, line_y, total_in, total_out, save_flag
         )
 
-        # ================= ALERT SYSTEM =================
-        if "alert_triggered" not in st.session_state:
-            st.session_state.alert_triggered = False
-
-        # Fetch live alert threshold (allows admin to change it at runtime)
+        # ================= ALERT =================
         current_limit = get_alert_limit()
 
         if inside >= current_limit and not st.session_state.alert_triggered:
@@ -260,7 +103,7 @@ def detection_page():
             st.session_state.alert_triggered = False
             status_container.empty()
 
-        # ================= LIVE METRICS UPDATE =================
+        # ================= METRICS =================
         with metrics_cols[0]:
             st.metric(" Entered", total_in)
         with metrics_cols[1]:
@@ -268,31 +111,18 @@ def detection_page():
         with metrics_cols[2]:
             st.metric(" Inside", inside)
 
-        # ================= DISPLAY FRAME =================
-        frame_window.image(
-            cv2.cvtColor(frame, cv2.COLOR_BGR2RGB),
-            width=min(w, 800)
-        )
+        # 🔥 Reduce UI refresh load
+        if frame_count % 2 == 0:
+            frame_window.image(
+                cv2.cvtColor(frame, cv2.COLOR_BGR2RGB),
+                width=min(w, 800)
+            )
 
     cap.release()
-    # Reset alert state after processing to ensure next upload works
     st.session_state.alert_triggered = False
 
-    # ================= COMPLETION STATUS =================
     st.success("Video processing completed successfully!")
-    
-    st.markdown("---")
-    
-    # ================= FINAL SUMMARY =================
-    st.markdown(
-        """
-        <div class="status-box">
-            <strong>Final Statistics</strong>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    
+
     summary_cols = st.columns(3)
     with summary_cols[0]:
         st.metric("Total Entered", total_in)

@@ -1,4 +1,3 @@
-from turtle import st
 import cv2
 from deep_sort_realtime.deepsort_tracker import DeepSort
 from ultralytics import YOLO
@@ -22,8 +21,9 @@ def reset_tracker():
     global trackableObjects
     trackableObjects = {}
 
+# 🔥 ADDED save_flag PARAMETER
 def process_frame(frame, frame_h, frame_w, line_y,
-                  total_in, total_out):
+                  total_in, total_out, save_flag=False):
 
     global trackableObjects
 
@@ -66,14 +66,19 @@ def process_frame(frame, frame_h, frame_w, line_y,
                     to.counted = True
 
         trackableObjects[tid] = to
-        save_detection(tid, cx / frame_w, cy / frame_h)
 
+        # 🔥 ONLY SAVE SOMETIMES
+        if save_flag:
+            save_detection(tid, cx / frame_w, cy / frame_h)
+
+        # Draw box
         cv2.rectangle(frame, (l, t), (r, b), (0, 255, 0), 2)
         cv2.putText(frame, f"ID {tid}", (l, t - 5),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6,
                     (0, 255, 0), 2)
 
     inside = len(ids_inside)
+
     update_live_count(total_in, total_out, inside)
-    
+
     return frame, total_in, total_out, inside

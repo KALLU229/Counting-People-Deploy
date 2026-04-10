@@ -1,5 +1,4 @@
 import streamlit as st
-from db import init_db, create_default_admin
 from views.login import login_page
 from views.register import register_page
 from views.dashboard import dashboard
@@ -8,15 +7,11 @@ from views.live_camera import live_camera_page
 from views.admin_panel import admin_panel
 from auth.jwt_utils import verify_token
 
-
 # ================== APP INIT ==================
 st.set_page_config(
     page_title="Crowd Counting System",
     layout="wide"
 )
-
-init_db()
-create_default_admin()
 
 # ================== AUTH UTIL ==================
 def get_current_user():
@@ -25,13 +20,15 @@ def get_current_user():
         return None
     return verify_token(token)
 
-
 # ================== SESSION ==================
 user = get_current_user()
 
 if not user:
     page = st.sidebar.radio("Auth", ["Login", "Register"])
-    login_page() if page == "Login" else register_page()
+    if page == "Login":
+        login_page()
+    else:
+        register_page()
 else:
     st.sidebar.success(f"Logged in as {user['email']}")
 
@@ -40,6 +37,7 @@ else:
         st.rerun()
 
     pages = ["Dashboard", "Detection", "Live Camera"]
+
     if user["role"] == "admin":
         pages.append("Admin Panel")
 
@@ -52,5 +50,4 @@ else:
     elif page == "Live Camera":
         live_camera_page()
     elif page == "Admin Panel":
-        admin_panel()
         admin_panel()

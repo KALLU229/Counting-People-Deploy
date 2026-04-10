@@ -1,22 +1,47 @@
-# Python cache
+# ================= PYTHON =================
 __pycache__/
 *.pyc
-
-# Virtual environment
-venv/
-.env
-
-# Database
+*.pyo
+*.pyd
 *.db
+*.sqlite3
 
-# ML model weights
-*.pt
+# ================= VENV =================
+venv/
+crowd_firebase/
+.env/
 
-# IDE files
-.vscode/
-.idea/
+# ================= FIREBASE (SECRET 🔐) =================
+firebase_key.json
 
-# OS files
+# ================= STREAMLIT =================
+.streamlit/
+
+# ================= OS FILES =================
 .DS_Store
 Thumbs.db
 
+# ================= IDE =================
+.vscode/
+.idea/
+
+# ================= LOGS =================
+*.log
+
+# ================= MODEL FILES (OPTIONAL) =================
+# Comment if you want to upload model
+# yolov8n.pt
+yolov8s.pt
+
+# ================= DATA FILES =================
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# ================= DATABASE =================
+crowd_system.db
+
+# ================= TEMP FILES =================
+*.tmp
+*.temp

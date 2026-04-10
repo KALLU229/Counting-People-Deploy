@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
+from firebase_config import db
 from db import (
-    get_conn,
     add_user,
     delete_user,
     get_detections,
@@ -57,15 +57,19 @@ def admin_panel():
     # ================= USER MANAGEMENT =================
     st.subheader("User Management")
 
-    conn = get_conn()
-    users = conn.execute(
-        "SELECT id, email, role FROM users ORDER BY id DESC"
-    ).fetchall()
-    conn.close()
+    # Fetch users from Firebase
+    docs = db.collection("users").stream()
 
-    df_users = pd.DataFrame(
-        users, columns=["ID", "Email", "Role"]
-    ) if users else pd.DataFrame()
+    users = []
+    for i, doc in enumerate(docs):
+        d = doc.to_dict()
+        users.append({
+            "ID": i + 1,
+            "Email": d.get("email"),
+            "Role": d.get("role")
+        })
+
+    df_users = pd.DataFrame(users) if users else pd.DataFrame()
 
     st.dataframe(df_users, use_container_width=True)
 
@@ -81,7 +85,7 @@ def admin_panel():
     with col3:
         role = st.selectbox("Role", ["user", "admin"], key="admin_add_role")
 
-    if st.button("Add User", use_container_width=True, key="admin_add_button"):
+    if st.button("Add User", use_container_width=True):
         if not email or not password:
             st.error("Please enter email and password")
         elif add_user(email, password, role):
@@ -94,14 +98,14 @@ def admin_panel():
     st.markdown("#### 🗑 Delete User")
 
     if not df_users.empty:
-        user_id = st.selectbox(
-            "Select User ID",
-            df_users["ID"].tolist(),
-            key="admin_delete_user_id"
+        email_to_delete = st.selectbox(
+            "Select User",
+            df_users["Email"].tolist(),
+            key="admin_delete_user_email"
         )
 
-        if st.button("Delete User", use_container_width=True, key="admin_delete_button"):
-            delete_user(user_id)
+        if st.button("Delete User", use_container_width=True):
+            delete_user(email_to_delete)
             st.success("User deleted successfully")
             st.rerun()
     else:
@@ -117,11 +121,10 @@ def admin_panel():
         min_value=1,
         max_value=10000,
         value=current_limit,
-        step=1,
-        key="admin_threshold_input"
+        step=1
     )
 
-    if st.button("Save Threshold", use_container_width=True, key="admin_threshold_button"):
+    if st.button("Save Threshold", use_container_width=True):
         set_alert_limit(int(new_limit))
         st.success(f"Alert threshold updated to {new_limit}")
         st.rerun()
@@ -143,11 +146,13 @@ def admin_panel():
 
     df = get_detections()
 
-    st.download_button(
-        "Download Detections CSV",
-        df.to_csv(index=False),
-        "detections.csv",
-        mime="text/csv",
-        use_container_width=True,
-        key="admin_download_detections"
-    )
+    if df.empty:
+        st.info("No detection data available")
+    else:
+        st.download_button(
+            "Download Detections CSV",
+            df.to_csv(index=False),
+            "detections.csv",
+            mime="text/csv",
+            use_container_width=True
+        )

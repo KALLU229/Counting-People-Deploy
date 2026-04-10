@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 from db import get_detections, get_counter_history
-
+import time
 
 def dashboard():
     # ================= DARK THEME STYLING =================
@@ -125,9 +125,13 @@ def dashboard():
     )
 
     # ================= LOAD DATA =================
+    st.cache_data.clear()
     detections = get_detections()
     history = get_counter_history()
-
+    history = history.sort_values(by="timestamp")
+    latest = history.iloc[-1]
+    
+    
     if history.empty:
         st.warning(" No data available yet. Start monitoring to see live statistics.")
         return
