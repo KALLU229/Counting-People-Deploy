@@ -2,7 +2,7 @@ import streamlit as st
 from views.login import login_page
 from views.register import register_page
 from views.dashboard import dashboard
-from views.detection import detection_page
+# from views.detection import detection_page
 from views.live_camera import live_camera_page
 from views.admin_panel import admin_panel
 from auth.jwt_utils import verify_token
